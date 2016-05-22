@@ -1,0 +1,21 @@
+<!doctype html>
+<title>FreesoundScapes</title>
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+<div class=page>
+  <h1>FreesoundScapes</h1>
+  <div class=login>
+  {% if not session.logged_in %}
+    <a href="{{ url_for('login') }}">Log in</a>
+  {% else %}
+    <a href="{{ url_for('logout') }}">log out</a>
+  {% endif %}
+  </div>
+  {% for message in get_flashed_messages() %}
+    <div class=flash>{{ message }}</div>
+  {% endfor %}
+  <div class=metanav>
+    <a href="{{ url_for('performance') }}">Participate</a>
+    <a href="{{ url_for('archive') }}">Perfornamce Archive</a>
+  </div>
+  {% block body %}{% endblock %}
+</div>

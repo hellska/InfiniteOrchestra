@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+{% block body %}
+<ul class=entries>
+  {% for entry in fssounds %}
+    <li><h2>{{ entry.id }}: {{ entry.text|safe }}</h2>
+      <iframe frameborder="0" scrolling="no" src="https://www.freesound.org/embed/sound/iframe/{{ entry.fsid }}/simple/medium/" width="481" height="86"></iframe>
+  {% else %}
+    <li><em>Unbelievable.  No entries here so far</em>
+  {% endfor %}
+  </ul>
+{% endblock %}

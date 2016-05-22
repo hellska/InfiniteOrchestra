@@ -1,0 +1,8 @@
+import freesound
+
+def freesound_client():
+	c = freesound.FreesoundClient()
+	# substitute <Freesound_token> with your token
+	c.set_token("<Freesound_token>", "token")
+	
+	return c

@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+  <head>
+    <title>FreesoundScapes</title>
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+  </head>
+  <body>
+    <div class=page>
+      <img src="{{ url_for('static', filename = 'SC-Cabecera.png') }}" style="width:100%;" align="middle" alt="Freesound.org">
+
+      {% for message in get_flashed_messages() %}
+      <div class=flash>{{ message }}</div>
+      {% endfor %}
+      {% block body %}{% endblock %}
+    </div>
+    {% block footer %}
+    <div class=footer>
+      <footer>
+        <a href="http://freesound.org/" target="_blank">
+          <img src="{{ url_for('static', filename = 'freesound.png') }}" style="height:100%; float:left;" align="middle" alt="Freesound.org">
+        </a>
+        <img src="{{ url_for('static', filename = 'mtg.svg') }}" style="height:100%; float:left;" align="middle" alt="Music Technology Group">
+      </footer>
+    </div>
+    <div class=main_title>
+      FreesoundScapes:
+      <a href="{{ url_for('show_index') }}" align="center">Home</a>
+      <a href="{{ url_for('search_form') }}" align="center">Participate</a>
+      <a href="{{ url_for('archive') }}" align="center">Archive</a>
+    </div>
+    {% endblock %}
+  </body>
+</html>
