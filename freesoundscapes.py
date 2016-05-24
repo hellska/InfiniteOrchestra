@@ -17,6 +17,7 @@ DEBUG = True
 SECRET_KEY = 'fscapes'
 USERNAME = 'fsadmin'
 PASSWORD = 'fsadmin'
+INIFILE = './performance.ini'
 
 # create the app
 app = Flask(__name__)
@@ -30,14 +31,35 @@ def connect_db():
     return sqlite3.connect(app.config['DATABASE'])
 
 # initialize db method (create a brand new empty database)
-def init_db():
+def init_db(sqlfile='./db/schema.sql'):
     with closing(connect_db()) as db:
-        with app.open_resource('./db/schema.sql', mode='r') as f:
+        with app.open_resource(sqlfile, mode='r') as f:
             db.cursor().executescript(f.read())
         db.commit
 
+def read_ini_file():
+    try:
+        with open(app.config['INIFILE'], 'r') as inifile:
+            pid = inifile.read()
+            if not pid:
+                pid = 888
+    except (IOError, OSError) as e:
+        pid = 999
+    
+    return pid
+
+def write_ini_file(inicontent):
+    try:
+        with open(app.config['INIFILE'], 'wb') as inifile:
+            inifile.write(inicontent)
+            return True
+    except (IOError, OSError) as e:
+        return False
+    
+
 def add_soundid(fsid, search_text):
-    g.db.execute('insert into fssounds (fsid, search_text) values (?, ?)', [fsid, search_text])
+    pid = read_ini_file()
+    g.db.execute('insert into fssounds (fsid, search_text, performance_id) values (?, ?, ?)', [fsid, search_text, pid])
     g.db.commit()
     
 # search sounds in freesound store the ID in the DB and embed the frame in the return page
@@ -57,7 +79,7 @@ def freesound_search(form_text):
         return_msg = "Great! You submitted a sound!"
     else:
         soundid = 0
-        return_msg = "No File Found"
+        return_msg = "No Sound Found!"
     
     return soundid, return_msg
 
@@ -102,8 +124,9 @@ def search_form():
 
 @app.route('/performance/list_sounds')
 def list_sounds():
-    queryout = g.db.execute('select * from fssounds order by id')
-    submitted_sounds = [dict(id=row[0], fsid=row[1], text=row[2]) for row in queryout.fetchall()]
+    pid = read_ini_file()
+    queryout = g.db.execute('select * from fssounds where performance_id = ? order by id', [pid])
+    submitted_sounds = [dict(id=row[0], fsid=row[1], text=row[2], perfid=row[3]) for row in queryout.fetchall()]
     return render_template('current_sound_list.html', fssounds=submitted_sounds)
     
 @app.route('/archive')
@@ -112,7 +135,8 @@ def archive():
 
 @app.route('/api/list_sounds')
 def api_list_sound():
-    queryout = g.db.execute('select * from fssounds order by id')
+    pid = read_ini_file()
+    queryout = g.db.execute('select * from fssounds where performance_id = ? order by id', [pid])
     submitted_sounds = {} #dict(fsid=row[1]) for row in queryout.fetchall()
     #submitted_sounds['fsid'] = {}
     for row in queryout.fetchall():
@@ -123,7 +147,16 @@ def api_list_sound():
         
     #return render_template('api_list_sounds.html', output=submitted_sounds)
     return jsonify(submitted_sounds)
+
+@app.route('/api/set_performance/<int:perfid>/<key>', methods=['GET', 'POST'])
+def set_performance_id(perfid,key):
+    if key==app.config['SECRET_KEY']:
+        write_ini_file(str(perfid))
+        return 'Performance ID: %d' % perfid
+    else:
+        return 'wrong password'
     
 # run standalone application
 if __name__ == '__main__':
     app.run()
+    #app.run(host='0.0.0.0',port='3333',debug=False)
