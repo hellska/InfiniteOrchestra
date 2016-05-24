@@ -12,9 +12,12 @@ To install the app clone the repository in your computer, create a virtual envir
 ## Create the Database
  Create the DB using the init_db.py script, it will create a freesoundscapes.db file into the db folder
  To inspect and modify the DB schema you can check the schema.sql file
-## Configuration Files
+## Configuration
+ ### Freesound API Key
  In order to configure the application enter the extlib directory and copy the myToken.py.template file into myToken.py
  Edit the myToken.py and add your Freesound API key following the instruction provided into the same file.
+ ### App Config
+ Edit the 'config' section in the main app file to customize your app according to your needs
 
 # Licence
  This application is released under General Public Licence V2 GPL_V2

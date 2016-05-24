@@ -13,11 +13,11 @@ import myToken
 
 # config
 DATABASE = './db/freesoundscapes.db'
-DEBUG = True
 SECRET_KEY = 'fscapes'
 USERNAME = 'fsadmin'
 PASSWORD = 'fsadmin'
 INIFILE = './performance.ini'
+DEBUG = True
 
 # create the app
 app = Flask(__name__)
