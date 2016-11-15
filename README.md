@@ -1,11 +1,9 @@
 # Freesoundscapes
-Small Flask based application. Text based Freesound samples search and download.
-This application is still under development, it has bugs and is incomplete, any contribution is welcome.
+Small Flask based application. Text based search in the Freesound database, the retrieved sounds are showed embedded in the search page, while the IDs are stored in the DB for future use. This application is still under development, it has bugs and is incomplete, any contribution is welcome. To read more about the app check the [Freesound Labs dedicated page](http://labs.freesound.org/apps/infinite-orchestra.html).
 
 # Description
 Author: Daniele Scarano
-
-Release: 0.1 beta
+Release: 0.2 beta
 
 # Installation
 To install the app clone the repository in your computer, create a virtual environment using virtualenv (optional, but recommended). Once you have set up the virtual environment enter the folder
@@ -19,10 +17,13 @@ Edit the myToken.py and add your Freesound API key following the instruction pro
 - App Config
 Edit the 'config' section in the main app file to customize your app according to your needs
 
-The complete how-to for the installation and configuration of the app is available in [this GoogleDoc](https://docs.google.com/document/d/17-bxkRr4g3hCTC2-fQI1OHavbeyHy0QCreeUFnY__ss/edit?usp=sharing)
+The complete how-to to install and configure the app is available in [this GoogleDoc](https://docs.google.com/document/d/17-bxkRr4g3hCTC2-fQI1OHavbeyHy0QCreeUFnY__ss/edit?usp=sharing)
 
 If you have any comment or question open an issue on the repository and I will answer as soon as possible.
 
+# Documentation
+ The current essential documentation is stored in the static/doc folder 
+ 
 # Licence
  This application is released under General Public Licence V2 GPL_V2
 
