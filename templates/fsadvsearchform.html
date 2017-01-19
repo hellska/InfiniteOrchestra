@@ -16,15 +16,13 @@
         <h2 name="desc" align="center">Welcome! Type a word and get your sound from Freesound!</h2>
     {% endif %}
 
-    <form action="{{ url_for('search_form') }}" method=post class=add-entry onsubmit="return checkform(this)">
+    <form action="{{ url_for('advanced_search_form') }}" method=post class=add-entry onsubmit="return checkform(this)">
         <div align=middle>
             <input type=text size=30 name=search_string>
+            <input type=number size=10 name=min_length>
+            <input type=number size=10 name=max_length>
             <input type=submit value="Search Sounds" class=submitbut>
         </div>
-    </form>
-
-    <form action="{{ url_for('advanced_search_form') }}" method=get class=add-entry onsubmit="return checkform(this)">
-        <input type=submit value="Advanced Search" class=submitbut>
     </form>
 
     <div align=middle><a href="{{ url_for('list_sounds') }}">View all the sounds submitted for the active performance</a></div>
