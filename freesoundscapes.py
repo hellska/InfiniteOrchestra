@@ -6,16 +6,17 @@ import extlib.myToken as myToken
 
 
 # config
-DATABASE = './db/freesoundscapes.db'
-SECRET_KEY = 'fscapes'
-USERNAME = 'fsadmin'
-PASSWORD = 'fsadmin'
-INIFILE = './performance.ini'
-DEBUG = True
+#DATABASE = './db/freesoundscapes.db'
+#SECRET_KEY = 'fscapes'
+#USERNAME = 'fsadmin'
+#PASSWORD = 'fsadmin'
+#INIFILE = './performance.ini'
+#DEBUG = True
 
 # create the app
 app = Flask(__name__)
-app.config.from_object(__name__)
+#app.config.from_object(__name__)
+app.config.from_pyfile('freesoundscapes.cfg')
 # read the config file if set the FLASKR_SETTINGS env variable
 # the values will override previous loaded one from the config section of this file
 app.config.from_envvar('FLASKR_SETTINGS', silent=True)
@@ -96,7 +97,7 @@ def freesound_advanced_search(search_dict):
     fsclient = myToken.freesound_client()
     print 'freesound advanced search'
     print search_dict
-    return False
+    return search_dict
 
 
 @app.before_request
