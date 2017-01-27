@@ -3,23 +3,21 @@ import sqlite3
 from contextlib import closing
 from flask import Flask, request, g, redirect, url_for, render_template, jsonify
 import extlib.myToken as myToken
+import random
 
 
 # config
-#DATABASE = './db/freesoundscapes.db'
-#SECRET_KEY = 'fscapes'
-#USERNAME = 'fsadmin'
-#PASSWORD = 'fsadmin'
-#INIFILE = './performance.ini'
-#DEBUG = True
+# DATABASE = './db/freesoundscapes.db'
+# SECRET_KEY = 'fscapes'
+# USERNAME = 'fsadmin'
+# PASSWORD = 'fsadmin'
+# INIFILE = './performance.ini'
+# DEBUG = True
 
-# create the app
+
 app = Flask(__name__)
-#app.config.from_object(__name__)
+# read config from a file
 app.config.from_pyfile('freesoundscapes.cfg')
-# read the config file if set the FLASKR_SETTINGS env variable
-# the values will override previous loaded one from the config section of this file
-app.config.from_envvar('FLASKR_SETTINGS', silent=True)
 
 
 # db connection method
@@ -117,7 +115,7 @@ def show_index():
     # app_title = 'Freesound Scapes'
     # return render_template('index.html', app_title = app_title)
     # Go straight to the search page
-    return redirect(url_for('search_form'))
+    return redirect(url_for('search_form', rannum = random.random()))
 
 
 @app.route('/performance', methods=['GET', 'POST'])
@@ -133,11 +131,12 @@ def search_form():
             # insert the sound into the DB
             if soundid > 0:
                 add_soundid(soundid, form_text)
-            return render_template('fssearchform.html', form_text=form_text, form_out=soundid, form_msg=msg)
+            return render_template('fssearchform.html', form_text=form_text, form_out=soundid, form_msg=msg,
+                                   rannum = random.random())
         else:
-            return redirect(url_for('search_form'))
+            return redirect(url_for('search_form', rannum = random.random()))
     else:
-        return render_template('fssearchform.html')
+        return render_template('fssearchform.html', rannum = random.random())
 
 
 @app.route('/performance/advanced_search', methods=['GET', 'POST'])
@@ -147,7 +146,7 @@ def advanced_search_form():
     :return: dictionary json song_dict
     """
     if request.method == 'GET':
-        return render_template('fsadvsearchform.html')
+        return render_template('fsadvsearchform.html', rannum = random.random())
     elif request.method == 'POST':
         # TODO: verify if the form fields are filled
         minlength = float(request.form['min_length'])
@@ -155,7 +154,7 @@ def advanced_search_form():
         search_dict = "{ text: '%s', mindur: %f, maxdur: %f }" % \
                       (request.form['search_string'], minlength, maxlength)
         freesound_advanced_search(search_dict)
-        return render_template('fsadvsearchform.html')
+        return render_template('fsadvsearchform.html', rannum = random.random())
 
 
 @app.route('/performance/list_sounds')
@@ -163,12 +162,12 @@ def list_sounds():
     pid = read_ini_file()
     queryout = g.db.execute('select * from fssounds where performance_id = ? order by id', [pid])
     submitted_sounds = [dict(id=row[0], fsid=row[1], text=row[2], perfid=row[3]) for row in queryout.fetchall()]
-    return render_template('current_sound_list.html', fssounds=submitted_sounds)
+    return render_template('current_sound_list.html', fssounds=submitted_sounds, rannum = random.random())
 
 
 @app.route('/archive')
 def archive():
-    return render_template('archive.html')
+    return render_template('archive.html', rannum = random.random())
 
 
 @app.route('/api/list_sounds')

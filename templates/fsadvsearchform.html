@@ -1,31 +1,37 @@
 {% extends "layout.html" %}
 {% block body %}
-
     {% if form_text%}
-      {% if form_out %}
-        <h2 align="middle">{{ form_msg }}</h2>
-        <h2 align="middle">We're gonna play your {{ form_text }} sound soon</h2>
-        <div align="middle">
-            <iframe frameborder="0" scrolling="no" src="https://www.freesound.org/embed/sound/iframe/{{ form_out }}/simple/small/" width="375" height="30"></iframe>
-        </div>
-        <h2 align="middle">Check it on freesound using its unique ID: {{ form_out }}</h2>
-      {% else %}
-        <h2 name="desc">No sound found with the string provided</h2>
-      {% endif %}
+        {% if form_out %}
+            <h2 align="middle">{{ form_msg }}</h2>
+            <h2 align="middle">We're gonna play your {{ form_text }} sound soon</h2>
+            <div align="middle">
+                <iframe frameborder="0" scrolling="no" src="https://www.freesound.org/embed/sound/iframe/{{ form_out }}/simple/small/" width="375" height="30"></iframe>
+            </div>
+            <h2 align="middle">Check it on freesound using its unique ID: {{ form_out }}</h2>
+        {% else %}
+            <h2 name="desc">No sound found with the string provided</h2>
+        {% endif %}
     {% else %}
         <h2 name="desc" align="center">Welcome! Type a word and get your sound from Freesound!</h2>
     {% endif %}
-
-    <form action="{{ url_for('advanced_search_form') }}" method=post class=add-entry onsubmit="return checkform(this)">
-        <div align=middle>
-            <input type=text size=30 name=search_string>
-            <input type=number size=10 name=min_length>
-            <input type=number size=10 name=max_length>
-            <br>
-            <input type=submit value="Search Sounds">
-        </div>
-    </form>
-
-    <div align=middle><a href="{{ url_for('list_sounds') }}">View all the sounds submitted for the active performance</a></div>
+    <div>
+        <form action="{{ url_for('advanced_search_form') }}" method=post class=add-entry onsubmit="return checkform(this)">
+            <label class="searchlabel">
+                Search Text: <input type=text size=30 name=search_string>
+            </label>
+            <label class="searchlabel">
+                Min length: <input type=number size=10 name=min_length>
+            </label>
+            <label class="searchlabel">
+                Max Lenght: <input type=number size=10 name=max_length>
+            </label>
+            <label>
+                <input type=submit value="Search Sounds">
+            </label>
+        </form>
+    </div>
+    <div align=middle>
+        <a href="{{ url_for('list_sounds') }}">View all the sounds submitted for the active performance</a>
+    </div>
 
 {% endblock %}

@@ -2,3 +2,4 @@
 .DS_Store
 static/doc/.*
 .idea
+.ipynb_checkpoints*
