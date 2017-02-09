@@ -6,6 +6,8 @@ import extlib.myToken as myToken
 import random
 
 
+# TODO: Use sqlAlchemy for database operations
+
 # config
 # DATABASE = './db/freesoundscapes.db'
 # SECRET_KEY = 'fscapes'
@@ -25,35 +27,46 @@ def connect_db():
     return sqlite3.connect(app.config['DATABASE'])
 
 
-# initialize db method (create a brand new empty database)
 def init_db(sqlfile='./db/schema.sql'):
+    """initialize db (create a brand new empty database)
+
+    :param sqlfile: path to the text file with sql statement to create the DB
+    :return: boolean True if DB created, False if DB not created
+    """
     with closing(connect_db()) as db:
         with app.open_resource(sqlfile, mode='r') as f:
-            db.cursor().executescript(f.read())
-        db.commit
+            try:
+                db.cursor().executescript(f.read())
+            except Exception as e:
+                print e
+                return False
+            else:
+                db.commit()
+                return True
 
 
 def read_ini_file():
-    try:
-        with open(app.config['INIFILE'], 'r') as inifile:
+    with open(app.config['INIFILE'], 'r') as inifile:
+        try:
             pid = inifile.read()
+        except (IOError, OSError) as e:
+            raise e
+            pid = 999
+        else:
             if not pid:
                 pid = 888
-    except (IOError, OSError) as e:
-        pid = 999
-        print e
-
     return pid
 
 
 def write_ini_file(inicontent):
-    try:
-        with open(app.config['INIFILE'], 'wb') as inifile:
+    with open(app.config['INIFILE'], 'wb') as inifile:
+        try:
             inifile.write(inicontent)
+        except (IOError, OSError) as e:
+            print e
+            return False
+        else:
             return True
-    except (IOError, OSError) as e:
-        print e
-        return False
 
 
 def add_soundid(fsid, search_text):
@@ -115,7 +128,7 @@ def show_index():
     # app_title = 'Freesound Scapes'
     # return render_template('index.html', app_title = app_title)
     # Go straight to the search page
-    return redirect(url_for('search_form', rannum = random.random()))
+    return redirect(url_for('search_form', rannum=random.random()))
 
 
 @app.route('/performance', methods=['GET', 'POST'])
@@ -132,11 +145,11 @@ def search_form():
             if soundid > 0:
                 add_soundid(soundid, form_text)
             return render_template('fssearchform.html', form_text=form_text, form_out=soundid, form_msg=msg,
-                                   rannum = random.random())
+                                   rannum=random.random())
         else:
-            return redirect(url_for('search_form', rannum = random.random()))
+            return redirect(url_for('search_form', rannum=random.random()))
     else:
-        return render_template('fssearchform.html', rannum = random.random())
+        return render_template('fssearchform.html', rannum=random.random())
 
 
 @app.route('/performance/advanced_search', methods=['GET', 'POST'])
@@ -146,7 +159,7 @@ def advanced_search_form():
     :return: dictionary json song_dict
     """
     if request.method == 'GET':
-        return render_template('fsadvsearchform.html', rannum = random.random())
+        return render_template('fsadvsearchform.html', rannum=random.random())
     elif request.method == 'POST':
         # TODO: verify if the form fields are filled
         minlength = float(request.form['min_length'])

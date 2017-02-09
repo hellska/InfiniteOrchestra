@@ -8,9 +8,10 @@
         <div class="mainpage">
             <img src="{{ url_for('static', filename = 'SC-Cabecera.png') }}" style="width:100%;" align="middle" alt="Freesound.org">
             {% for message in get_flashed_messages() %}
-                <div class=flash>{{ message }}</div>{% endfor %}
-            {% block body %}{% endblock %}
-
+                <div class=flash>{{ message }}</div>
+            {% endfor %}
+            {% block body %}
+            {% endblock %}
             {% block footer %}
                 <div class="internal footer">
                     <footer>
